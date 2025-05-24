@@ -1,0 +1,18 @@
+[package]
+name = "rustimizer"
+version = "0.1.0"
+edition = "2024"
+authors = ["Nicholas Fiorentini"]
+description = "PoC for decision making in Rust. Disclaimer: The project's name was chosen with the help of an LLM. "
+
+[lib]
+name = "rustimizer"
+
+[profile.dev]
+opt-level = 1               # Use slightly better optimizations.
+
+[profile.release]
+strip = "debuginfo"         # strip either symbols or debuginfo from a binary.
+
+[dependencies]
+thiserror = "2.0.12"
