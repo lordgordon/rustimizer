@@ -16,17 +16,17 @@ fn l2_norm_vectors(m: ArrayView2<f64>) -> Array1<f64> {
     norms
 }
 
-fn index_of_best_vector(m: ArrayView2<f64>) -> usize {
+pub fn index_of_best_vector(m: ArrayView2<f64>) -> usize {
     // compute l2 norm for each vector (row) and find the best (min) vector
     l2_norm_vectors(m).argmin().unwrap()
 }
 
-fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
+pub fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
     let shift_vector = Array1::from_elem(v.len(), shift);
     (&v - shift_vector) * scaling_factor
 }
 
-fn rescale_and_invert_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
+pub fn rescale_and_invert_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
     // This is scaling and then a 180° rotation to ensure the min is now the max, and vice-versa.
     let ones = Array1::ones(v.len());
     (&rescale_vector(v, shift, scaling_factor) - ones) * -1.0
