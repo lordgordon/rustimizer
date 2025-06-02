@@ -2,9 +2,6 @@
 use ndarray::{Array1, ArrayView1, ArrayView2, Zip};
 use ndarray_stats::QuantileExt;
 
-// TODO: this should be modularized as a trait
-// TODO: documentation
-
 fn l2_norm(v: ArrayView1<f64>) -> f64 {
     v.dot(&v).sqrt()
 }
@@ -35,18 +32,8 @@ fn rescale_and_invert_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64
     (&rescale_vector(v, shift, scaling_factor) - ones) * -1.0
 }
 
-// TODO: function to automatically compute the min and max
-// TODO: address division by zero, guarantee max > min
-//      let min_val = v.max().unwrap();
-//      let max_val = v.min().unwrap();
-//      shift = min_val
-//      scaling_factor = max_value - min_value
-// TODO: install openblas?
-
 #[cfg(test)]
 mod tests {
-    // TODO: https://crates.io/crates/proptest
-
     use ndarray::array;
 
     use super::*;
