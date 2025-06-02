@@ -20,11 +20,8 @@ fn l2_norm_vectors(m: ArrayView2<f64>) -> Array1<f64> {
 }
 
 fn index_of_best_vector(m: ArrayView2<f64>) -> usize {
-    // compute l2 norm for each vector (row)
-    let norms = l2_norm_vectors(m);
-
-    // find the best (min) vector
-    norms.argmin().unwrap()
+    // compute l2 norm for each vector (row) and find the best (min) vector
+    l2_norm_vectors(m).argmin().unwrap()
 }
 
 fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
