@@ -17,4 +17,6 @@ opt-level = 1               # Use slightly better optimizations.
 strip = "debuginfo"         # strip either symbols or debuginfo from a binary.
 
 [dependencies]
+ndarray = "0.16.1"
+ndarray-stats = "0.6.0"
 thiserror = "2.0.12"
