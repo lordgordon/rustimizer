@@ -1,5 +1,8 @@
-//! This module implements the concept of vectorized variables.
+//! This module implements the low level computations for vectorized variables.
 use ndarray::{Array1, ArrayView1, ArrayView2, Zip};
+use ndarray_stats::QuantileExt;
+
+// TODO: this should be modularized as a trait
 
 fn l2_norm(v: ArrayView1<f64>) -> f64 {
     v.dot(&v).sqrt()
@@ -21,21 +24,13 @@ fn index_of_best_vector(m: ArrayView2<f64>) -> usize {
     let norms = l2_norm_vectors(m);
 
     // find the best (min) vector
-    let mut min_norm = norms[0];
-    let mut min_index = 0;
-
-    for (i, norm) in norms.iter().enumerate() {
-        if *norm == 0.0 {
-            // fast exit for best case
-            return i;
-        }
-        if norm < &min_norm {
-            min_norm = *norm;
-            min_index = i;
-        }
-    }
-    min_index
+    norms.argmin().unwrap()
 }
+
+// fn rescale_vector(v: ArrayView1<f64>) -> ArrayView1 {
+//     let min_val = v.max().unwrap();
+//     let max_val = v.min().unwrap();
+// }
 
 #[cfg(test)]
 mod tests {
@@ -73,6 +68,4 @@ mod tests {
         assert_eq!(l2_norm_vectors(m1.view()), array![sqrt3, 2., SQRT2, SQRT2,]);
         assert_eq!(index_of_best_vector(m1.view()), 2);
     }
-
-    // TODO: start building a matrix of values with a custom data structure
 }
