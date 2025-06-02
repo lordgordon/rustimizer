@@ -3,6 +3,7 @@ use ndarray::{Array1, ArrayView1, ArrayView2, Zip};
 use ndarray_stats::QuantileExt;
 
 // TODO: this should be modularized as a trait
+// TODO: documentation
 
 fn l2_norm(v: ArrayView1<f64>) -> f64 {
     v.dot(&v).sqrt()
@@ -26,18 +27,17 @@ fn index_of_best_vector(m: ArrayView2<f64>) -> usize {
     norms.argmin().unwrap()
 }
 
-fn rescale_value(x: f64, min_val: f64, max_val: f64) -> f64 {
-    // TODO: address division by zero, guarantee max > min
-    (x - min_val) / (max_val - min_val)
-}
-
-fn rescale_vector(v: ArrayView1<f64>, min_val: f64, max_val: f64) -> Array1<f64> {
-    v.map(|x| rescale_value(*x, min_val, max_val))
+fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
+    let shift_vector = Array1::from_elem(v.len(), shift);
+    (&v - shift_vector) * scaling_factor
 }
 
 // TODO: function to automatically compute the min and max
+// TODO: address division by zero, guarantee max > min
 // let min_val = v.max().unwrap();
 // let max_val = v.min().unwrap();
+// shift = min_val
+// scaling_factor = max_value - min_value
 
 #[cfg(test)]
 mod tests {
@@ -102,78 +102,39 @@ mod tests {
     }
 
     #[test]
-    fn test_rescale_value_min_pos_already_scaled() {
-        assert_eq!(rescale_value(0., 0., 1.0), 0.);
+    fn test_rescale_vector_pos_already_scaled() {
+        let v = array![0., 0.5, 1.];
+        assert_eq!(rescale_vector(v.view(), 0., 1.), array![0., 0.5, 1.]);
     }
 
     #[test]
-    fn test_rescale_value_max_pos_already_scaled() {
-        assert_eq!(rescale_value(1., 0., 1.0), 1.);
+    fn test_rescale_vector_pos_scaling() {
+        let v = array![1., 6., 11.];
+        let shift = v.min().unwrap();
+        let scaling_factor = 1.0 / (v.max().unwrap() - shift);
+        assert_eq!(
+            rescale_vector(v.view(), *shift, scaling_factor),
+            array![0., 0.5, 1.]
+        );
     }
 
     #[test]
-    fn test_rescale_value_half_pos_already_scaled() {
-        assert_eq!(rescale_value(0.5, 0., 1.0), 0.5);
+    fn test_rescale_vector_neg() {
+        let v = array![-3., -2., -1.];
+        let shift = v.min().unwrap();
+        let scaling_factor = 1.0 / (v.max().unwrap() - shift);
+        assert_eq!(
+            rescale_vector(v.view(), *shift, scaling_factor),
+            array![0., 0.5, 1.]
+        );
     }
 
     #[test]
-    fn test_rescale_value_min_pos_with_scaling() {
-        assert_eq!(rescale_value(1., 1., 10.0), 0.);
-    }
-
-    #[test]
-    fn test_rescale_value_max_pos_with_scaling() {
-        assert_eq!(rescale_value(10., 1., 10.0), 1.);
-    }
-
-    #[test]
-    fn test_rescale_value_half_pos_with_scaling() {
-        assert_eq!(rescale_value(5.5, 1., 10.0), 0.5);
-    }
-
-    #[test]
-    fn test_rescale_value_min_neg_left() {
-        assert_eq!(rescale_value(-1., -1., 1.0), 0.);
-    }
-
-    #[test]
-    fn test_rescale_value_max_neg_left() {
-        assert_eq!(rescale_value(1., -1., 1.0), 1.);
-    }
-
-    #[test]
-    fn test_rescale_value_half_neg_left() {
-        assert_eq!(rescale_value(0., -1., 1.0), 0.5);
-    }
-
-    #[test]
-    fn test_rescale_value_min_neg_full() {
-        assert_eq!(rescale_value(-3., -3., -1.0), 0.);
-    }
-
-    #[test]
-    fn test_rescale_value_max_neg_full() {
-        assert_eq!(rescale_value(-1., -3., -1.0), 1.);
-    }
-
-    #[test]
-    fn test_rescale_value_half_neg_full() {
-        assert_eq!(rescale_value(-2., -3., -1.0), 0.5);
-    }
-
-    #[test]
-    fn test_rescale_value_out_of_range_is_valid_left() {
-        assert_eq!(rescale_value(-1.0, 0., 1.0), -1.0);
-    }
-
-    #[test]
-    fn test_rescale_value_out_of_range_is_valid_right() {
-        assert_eq!(rescale_value(2.0, 0., 1.0), 2.0);
-    }
-
-    #[test]
-    fn test_rescale_vector() {
-        let v = array![1., 5.5, 10.];
-        assert_eq!(rescale_vector(v.view(), 1., 10.), array![0., 0.5, 1.]);
+    fn test_rescale_vector_scaling() {
+        let v = array![0., 1., 6., 11., 12.];
+        assert_eq!(
+            rescale_vector(v.view(), 1., 0.1),
+            array![-0.1, 0., 0.5, 1., 1.1]
+        );
     }
 }
