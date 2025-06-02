@@ -36,6 +36,7 @@ fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1
 //      shift = min_val
 //      scaling_factor = max_value - min_value
 // TODO: function to rescale and invert
+// TODO: install openblas?
 
 #[cfg(test)]
 mod tests {
@@ -117,7 +118,7 @@ mod tests {
     }
 
     #[test]
-    fn test_rescale_vector_neg() {
+    fn test_rescale_vector_neg_scaling() {
         let v = array![-3., -2., -1.];
         let shift = v.min().unwrap();
         let scaling_factor = 1.0 / (v.max().unwrap() - shift);
