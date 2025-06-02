@@ -29,13 +29,18 @@ fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1
     (&v - shift_vector) * scaling_factor
 }
 
+fn rescale_and_invert_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
+    // This is scaling and then a 180° rotation to ensure the min is now the max, and vice-versa.
+    let ones = Array1::ones(v.len());
+    (&rescale_vector(v, shift, scaling_factor) - ones) * -1.0
+}
+
 // TODO: function to automatically compute the min and max
 // TODO: address division by zero, guarantee max > min
 //      let min_val = v.max().unwrap();
 //      let max_val = v.min().unwrap();
 //      shift = min_val
 //      scaling_factor = max_value - min_value
-// TODO: function to rescale and invert
 // TODO: install openblas?
 
 #[cfg(test)]
@@ -134,6 +139,15 @@ mod tests {
         assert_eq!(
             rescale_vector(v.view(), 1., 0.1),
             array![-0.1, 0., 0.5, 1., 1.1]
+        );
+    }
+
+    #[test]
+    fn test_rescale_and_invert_vector() {
+        let v = array![0., 1., 6., 11., 12.];
+        assert_eq!(
+            rescale_and_invert_vector(v.view(), 1., 0.1),
+            array![1.1, 1., 0.5, 0., -0.10000000000000009]
         );
     }
 }
