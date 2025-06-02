@@ -15,7 +15,6 @@ fn l2_norm_vectors(m: ArrayView2<f64>) -> Array1<f64> {
     Zip::from(&mut norms)
         .and(m.rows())
         .for_each(|norms, row| *norms = l2_norm(row.view()));
-
     norms
 }
 
@@ -32,12 +31,13 @@ fn rescale_value(x: f64, min_val: f64, max_val: f64) -> f64 {
     (x - min_val) / (max_val - min_val)
 }
 
-// fn rescale_vector(v: ArrayView1<f64>) -> ArrayView1 {
-//     let min_val = v.max().unwrap();
-//     let max_val = v.min().unwrap();
+fn rescale_vector(v: ArrayView1<f64>, min_val: f64, max_val: f64) -> Array1<f64> {
+    v.map(|x| rescale_value(*x, min_val, max_val))
+}
 
-//     v.for_each(f);
-// }
+// TODO: function to automatically compute the min and max
+// let min_val = v.max().unwrap();
+// let max_val = v.min().unwrap();
 
 #[cfg(test)]
 mod tests {
@@ -102,72 +102,78 @@ mod tests {
     }
 
     #[test]
-    fn rescale_value_min_pos_already_scaled() {
+    fn test_rescale_value_min_pos_already_scaled() {
         assert_eq!(rescale_value(0., 0., 1.0), 0.);
     }
 
     #[test]
-    fn rescale_value_max_pos_already_scaled() {
+    fn test_rescale_value_max_pos_already_scaled() {
         assert_eq!(rescale_value(1., 0., 1.0), 1.);
     }
 
     #[test]
-    fn rescale_value_half_pos_already_scaled() {
+    fn test_rescale_value_half_pos_already_scaled() {
         assert_eq!(rescale_value(0.5, 0., 1.0), 0.5);
     }
 
     #[test]
-    fn rescale_value_min_pos_with_scaling() {
+    fn test_rescale_value_min_pos_with_scaling() {
         assert_eq!(rescale_value(1., 1., 10.0), 0.);
     }
 
     #[test]
-    fn rescale_value_max_pos_with_scaling() {
+    fn test_rescale_value_max_pos_with_scaling() {
         assert_eq!(rescale_value(10., 1., 10.0), 1.);
     }
 
     #[test]
-    fn rescale_value_half_pos_with_scaling() {
+    fn test_rescale_value_half_pos_with_scaling() {
         assert_eq!(rescale_value(5.5, 1., 10.0), 0.5);
     }
 
     #[test]
-    fn rescale_value_min_neg_left() {
+    fn test_rescale_value_min_neg_left() {
         assert_eq!(rescale_value(-1., -1., 1.0), 0.);
     }
 
     #[test]
-    fn rescale_value_max_neg_left() {
+    fn test_rescale_value_max_neg_left() {
         assert_eq!(rescale_value(1., -1., 1.0), 1.);
     }
 
     #[test]
-    fn rescale_value_half_neg_left() {
+    fn test_rescale_value_half_neg_left() {
         assert_eq!(rescale_value(0., -1., 1.0), 0.5);
     }
 
     #[test]
-    fn rescale_value_min_neg_full() {
+    fn test_rescale_value_min_neg_full() {
         assert_eq!(rescale_value(-3., -3., -1.0), 0.);
     }
 
     #[test]
-    fn rescale_value_max_neg_full() {
+    fn test_rescale_value_max_neg_full() {
         assert_eq!(rescale_value(-1., -3., -1.0), 1.);
     }
 
     #[test]
-    fn rescale_value_half_neg_full() {
+    fn test_rescale_value_half_neg_full() {
         assert_eq!(rescale_value(-2., -3., -1.0), 0.5);
     }
 
     #[test]
-    fn rescale_value_out_of_range_is_valid_left() {
+    fn test_rescale_value_out_of_range_is_valid_left() {
         assert_eq!(rescale_value(-1.0, 0., 1.0), -1.0);
     }
 
     #[test]
-    fn rescale_value_out_of_range_is_valid_right() {
+    fn test_rescale_value_out_of_range_is_valid_right() {
         assert_eq!(rescale_value(2.0, 0., 1.0), 2.0);
+    }
+
+    #[test]
+    fn test_rescale_vector() {
+        let v = array![1., 5.5, 10.];
+        assert_eq!(rescale_vector(v.view(), 1., 10.), array![0., 0.5, 1.]);
     }
 }
