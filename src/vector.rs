@@ -102,5 +102,72 @@ mod tests {
     }
 
     #[test]
-    fn rescale_value_success() {}
+    fn rescale_value_min_pos_already_scaled() {
+        assert_eq!(rescale_value(0., 0., 1.0), 0.);
+    }
+
+    #[test]
+    fn rescale_value_max_pos_already_scaled() {
+        assert_eq!(rescale_value(1., 0., 1.0), 1.);
+    }
+
+    #[test]
+    fn rescale_value_half_pos_already_scaled() {
+        assert_eq!(rescale_value(0.5, 0., 1.0), 0.5);
+    }
+
+    #[test]
+    fn rescale_value_min_pos_with_scaling() {
+        assert_eq!(rescale_value(1., 1., 10.0), 0.);
+    }
+
+    #[test]
+    fn rescale_value_max_pos_with_scaling() {
+        assert_eq!(rescale_value(10., 1., 10.0), 1.);
+    }
+
+    #[test]
+    fn rescale_value_half_pos_with_scaling() {
+        assert_eq!(rescale_value(5.5, 1., 10.0), 0.5);
+    }
+
+    #[test]
+    fn rescale_value_min_neg_left() {
+        assert_eq!(rescale_value(-1., -1., 1.0), 0.);
+    }
+
+    #[test]
+    fn rescale_value_max_neg_left() {
+        assert_eq!(rescale_value(1., -1., 1.0), 1.);
+    }
+
+    #[test]
+    fn rescale_value_half_neg_left() {
+        assert_eq!(rescale_value(0., -1., 1.0), 0.5);
+    }
+
+    #[test]
+    fn rescale_value_min_neg_full() {
+        assert_eq!(rescale_value(-3., -3., -1.0), 0.);
+    }
+
+    #[test]
+    fn rescale_value_max_neg_full() {
+        assert_eq!(rescale_value(-1., -3., -1.0), 1.);
+    }
+
+    #[test]
+    fn rescale_value_half_neg_full() {
+        assert_eq!(rescale_value(-2., -3., -1.0), 0.5);
+    }
+
+    #[test]
+    fn rescale_value_out_of_range_is_valid_left() {
+        assert_eq!(rescale_value(-1.0, 0., 1.0), -1.0);
+    }
+
+    #[test]
+    fn rescale_value_out_of_range_is_valid_right() {
+        assert_eq!(rescale_value(2.0, 0., 1.0), 2.0);
+    }
 }
