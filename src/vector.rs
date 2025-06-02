@@ -31,10 +31,11 @@ fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1
 
 // TODO: function to automatically compute the min and max
 // TODO: address division by zero, guarantee max > min
-// let min_val = v.max().unwrap();
-// let max_val = v.min().unwrap();
-// shift = min_val
-// scaling_factor = max_value - min_value
+//      let min_val = v.max().unwrap();
+//      let max_val = v.min().unwrap();
+//      shift = min_val
+//      scaling_factor = max_value - min_value
+// TODO: function to rescale and invert
 
 #[cfg(test)]
 mod tests {
