@@ -26,7 +26,11 @@ pub fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Ar
     (&v - shift_vector) * scaling_factor
 }
 
-pub fn rescale_and_invert_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
+pub fn rescale_and_invert_vector(
+    v: ArrayView1<f64>,
+    shift: f64,
+    scaling_factor: f64,
+) -> Array1<f64> {
     // This is scaling and then a 180° rotation to ensure the min is now the max, and vice-versa.
     let ones = Array1::ones(v.len());
     (&rescale_vector(v, shift, scaling_factor) - ones) * -1.0
@@ -41,51 +45,51 @@ mod tests {
     const SQRT2: f64 = std::f64::consts::SQRT_2;
 
     #[test]
-    fn test_l2_norm_single_value_zero() {
+    fn l2_norm_single_value_zero() {
         let v = array![0.];
         assert_eq!(l2_norm(v.view()), 0.);
     }
 
     #[test]
-    fn test_l2_norm_single_value_exact() {
+    fn l2_norm_single_value_exact() {
         let v = array![2.];
         assert_eq!(l2_norm(v.view()), 2.);
     }
 
     #[test]
-    fn test_l2_norm_vector2_ones() {
+    fn l2_norm_vector2_ones() {
         let v = array![1., 1.];
         assert_eq!(l2_norm(v.view()), SQRT2);
     }
 
     #[test]
-    fn test_l2_norm_vector_zeros() {
+    fn l2_norm_vector_zeros() {
         let v = Array1::<f64>::zeros(5);
         assert_eq!(l2_norm(v.view()), 0.);
     }
 
     #[test]
-    fn test_l2_norm_vector_ones() {
+    fn l2_norm_vector_ones() {
         let v = Array1::<f64>::ones(5);
         assert_eq!(l2_norm(v.view()), (5.0_f64).sqrt());
     }
 
     #[test]
-    fn test_best_vector_from_matrix_success_1() {
+    fn best_vector_from_matrix_success_1() {
         let m = array![[1., 1.], [0., 0.], [1., 0.], [0., 1.],];
         assert_eq!(l2_norm_vectors(m.view()), array![SQRT2, 0., 1., 1.]);
         assert_eq!(index_of_best_vector(m.view()), 1);
     }
 
     #[test]
-    fn test_best_vector_from_matrix_success_2() {
+    fn best_vector_from_matrix_success_2() {
         let m = array![[1., 1.], [2., 0.], [1., 0.], [0., 2.],];
         assert_eq!(l2_norm_vectors(m.view()), array![SQRT2, 2., 1., 2.]);
         assert_eq!(index_of_best_vector(m.view()), 2);
     }
 
     #[test]
-    fn test_best_vector_from_matrix_success_3() {
+    fn best_vector_from_matrix_success_3() {
         let sqrt3: f64 = (3.0_f64).sqrt();
         let m = array![[1., 1., 1.], [2., 0., 0.], [1., 0., 1.], [1., 0., 1.],];
         assert_eq!(l2_norm_vectors(m.view()), array![sqrt3, 2., SQRT2, SQRT2,]);
@@ -93,13 +97,13 @@ mod tests {
     }
 
     #[test]
-    fn test_rescale_vector_pos_already_scaled() {
+    fn rescale_vector_pos_already_scaled() {
         let v = array![0., 0.5, 1.];
         assert_eq!(rescale_vector(v.view(), 0., 1.), array![0., 0.5, 1.]);
     }
 
     #[test]
-    fn test_rescale_vector_pos_scaling() {
+    fn rescale_vector_pos_scaling() {
         let v = array![1., 6., 11.];
         let shift = v.min().unwrap();
         let scaling_factor = 1.0 / (v.max().unwrap() - shift);
@@ -110,7 +114,7 @@ mod tests {
     }
 
     #[test]
-    fn test_rescale_vector_neg_scaling() {
+    fn rescale_vector_neg_scaling() {
         let v = array![-3., -2., -1.];
         let shift = v.min().unwrap();
         let scaling_factor = 1.0 / (v.max().unwrap() - shift);
@@ -121,7 +125,7 @@ mod tests {
     }
 
     #[test]
-    fn test_rescale_vector_scaling() {
+    fn rescale_vector_scaling() {
         let v = array![0., 1., 6., 11., 12.];
         assert_eq!(
             rescale_vector(v.view(), 1., 0.1),
@@ -130,7 +134,7 @@ mod tests {
     }
 
     #[test]
-    fn test_rescale_and_invert_vector() {
+    fn rescale_and_invert_vector_full() {
         let v = array![0., 1., 6., 11., 12.];
         assert_eq!(
             rescale_and_invert_vector(v.view(), 1., 0.1),
