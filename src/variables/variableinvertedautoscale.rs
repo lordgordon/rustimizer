@@ -37,7 +37,6 @@ mod tests {
         let var = VariableInvertedAutoscale::new(array![0.]);
         assert_eq!(var.length(), 1);
         // assert_eq!(var.rescale(), array![0.]);
-        // TODO: handle the single value case
     }
 
     #[test]

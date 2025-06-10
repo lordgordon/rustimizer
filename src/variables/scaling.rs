@@ -18,6 +18,7 @@ pub fn rescale_and_invert_vector(
 }
 
 pub fn autorescale_vector(v: ArrayView1<f64>, inverted: bool) -> Array1<f64> {
+    // TODO: handle the  case where min == max
     let shift = v.min().unwrap();
     let scaling_factor = 1.0 / (v.max().unwrap() - shift);
     if inverted {
