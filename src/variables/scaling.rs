@@ -17,10 +17,14 @@ pub fn rescale_and_invert_vector(
     (&rescale_vector(v, shift, scaling_factor) - ones) * -1.0
 }
 
-pub fn autorescale_vector(v: ArrayView1<f64>) -> Array1<f64> {
+pub fn autorescale_vector(v: ArrayView1<f64>, inverted: bool) -> Array1<f64> {
     let shift = v.min().unwrap();
     let scaling_factor = 1.0 / (v.max().unwrap() - shift);
-    rescale_vector(v.view(), *shift, scaling_factor)
+    if inverted {
+        rescale_and_invert_vector(v.view(), *shift, scaling_factor)
+    } else {
+        rescale_vector(v.view(), *shift, scaling_factor)
+    }
 }
 
 #[cfg(test)]
@@ -33,7 +37,7 @@ mod tests {
     fn rescale_vector_pos_already_scaled() {
         let v = array![0., 0.5, 1.];
         assert_eq!(rescale_vector(v.view(), 0., 1.), v);
-        assert_eq!(autorescale_vector(v.view()), v);
+        assert_eq!(autorescale_vector(v.view(), false), v);
     }
 
     #[test]
@@ -41,7 +45,7 @@ mod tests {
         let v = array![1., 6., 11.];
         let expected_scaled = array![0., 0.5, 1.];
         assert_eq!(rescale_vector(v.view(), 1.0, 0.1), expected_scaled);
-        assert_eq!(autorescale_vector(v.view()), expected_scaled);
+        assert_eq!(autorescale_vector(v.view(), false), expected_scaled);
     }
 
     #[test]
@@ -49,7 +53,7 @@ mod tests {
         let v = array![-3., -2., -1.];
         let expected_scaled = array![0., 0.5, 1.];
         assert_eq!(rescale_vector(v.view(), -3.0, 0.5), expected_scaled);
-        assert_eq!(autorescale_vector(v.view()), expected_scaled);
+        assert_eq!(autorescale_vector(v.view(), false), expected_scaled);
     }
 
     #[test]
@@ -60,7 +64,7 @@ mod tests {
             array![-0.1, 0., 0.5, 1., 1.1]
         );
         assert_eq!(
-            autorescale_vector(v.view()),
+            autorescale_vector(v.view(), false),
             array![0., 0.08333333333333333, 0.5, 0.9166666666666666, 1.]
         );
     }
@@ -71,6 +75,10 @@ mod tests {
         assert_eq!(
             rescale_and_invert_vector(v.view(), 1., 0.1),
             array![1.1, 1., 0.5, 0., -0.10000000000000009]
+        );
+        assert_eq!(
+            autorescale_vector(v.view(), true),
+            array![1., 0.9166666666666666, 0.5, 0.08333333333333337, 0.]
         );
     }
 }
