@@ -1,21 +1,7 @@
-//! This module implements the definition of a vectorized variables.
-use crate::vector::rescale_vector;
+//! This module implements the basic autoscaled vectorized variables.
+use crate::variables::scaling::autorescale_vector;
+use crate::variables::traits::{HasLength, HasValues, Rescalable};
 use ndarray::{Array1, ArrayView1};
-use ndarray_stats::QuantileExt;
-
-pub trait HasValues {
-    fn values(&self) -> ArrayView1<f64>;
-}
-
-pub trait HasLength: HasValues {
-    fn length(&self) -> usize {
-        self.values().len()
-    }
-}
-
-pub trait Rescalable: HasValues {
-    fn rescale(&self) -> Array1<f64>;
-}
 
 pub struct VariableAutoscale {
     values: Array1<f64>,
@@ -37,10 +23,7 @@ impl HasLength for VariableAutoscale {}
 
 impl Rescalable for VariableAutoscale {
     fn rescale(&self) -> Array1<f64> {
-        // TODO: reuse when implementing VariableInvertedAutoscale
-        let shift = self.values.min().unwrap();
-        let scaling_factor = 1.0 / (self.values.max().unwrap() - shift);
-        rescale_vector(self.values.view(), *shift, scaling_factor)
+        autorescale_vector(self.values.view())
     }
 }
 
