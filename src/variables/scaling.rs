@@ -33,41 +33,41 @@ pub fn autorescale_vector(v: ArrayView1<f64>, inverted: bool) -> Array1<f64> {
 
 #[cfg(test)]
 mod tests {
-    use ndarray::array;
-
     use super::*;
+    use approx::assert_ulps_eq;
+    use ndarray::array;
 
     #[test]
     fn rescale_vector_pos_already_scaled() {
         let v = array![0., 0.5, 1.];
-        assert_eq!(rescale_vector(v.view(), 0., 1.), v);
-        assert_eq!(autorescale_vector(v.view(), false), v);
+        assert_ulps_eq!(rescale_vector(v.view(), 0., 1.), v);
+        assert_ulps_eq!(autorescale_vector(v.view(), false), v);
     }
 
     #[test]
     fn rescale_vector_pos_scaling() {
         let v = array![1., 6., 11.];
         let expected_scaled = array![0., 0.5, 1.];
-        assert_eq!(rescale_vector(v.view(), 1.0, 0.1), expected_scaled);
-        assert_eq!(autorescale_vector(v.view(), false), expected_scaled);
+        assert_ulps_eq!(rescale_vector(v.view(), 1.0, 0.1), expected_scaled);
+        assert_ulps_eq!(autorescale_vector(v.view(), false), expected_scaled);
     }
 
     #[test]
     fn rescale_vector_neg_scaling() {
         let v = array![-3., -2., -1.];
         let expected_scaled = array![0., 0.5, 1.];
-        assert_eq!(rescale_vector(v.view(), -3.0, 0.5), expected_scaled);
-        assert_eq!(autorescale_vector(v.view(), false), expected_scaled);
+        assert_ulps_eq!(rescale_vector(v.view(), -3.0, 0.5), expected_scaled);
+        assert_ulps_eq!(autorescale_vector(v.view(), false), expected_scaled);
     }
 
     #[test]
     fn rescale_vector_scaling() {
         let v = array![0., 1., 6., 11., 12.];
-        assert_eq!(
+        assert_ulps_eq!(
             rescale_vector(v.view(), 1., 0.1),
             array![-0.1, 0., 0.5, 1., 1.1]
         );
-        assert_eq!(
+        assert_ulps_eq!(
             autorescale_vector(v.view(), false),
             array![0., 0.08333333333333333, 0.5, 0.9166666666666666, 1.]
         );
@@ -75,12 +75,13 @@ mod tests {
 
     #[test]
     fn rescale_and_invert_vector_full() {
-        let v = array![0., 1., 6., 11., 12.];
-        assert_eq!(
+        let v: ndarray::ArrayBase<ndarray::OwnedRepr<f64>, ndarray::Dim<[usize; 1]>> =
+            array![0., 1., 6., 11., 12.];
+        assert_ulps_eq!(
             rescale_and_invert_vector(v.view(), 1., 0.1),
-            array![1.1, 1., 0.5, 0., -0.10000000000000009]
+            array![1.1, 1., 0.5, 0., -0.1]
         );
-        assert_eq!(
+        assert_ulps_eq!(
             autorescale_vector(v.view(), true),
             array![1., 0.9166666666666666, 0.5, 0.08333333333333337, 0.]
         );

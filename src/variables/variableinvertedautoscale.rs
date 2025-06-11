@@ -31,6 +31,7 @@ impl Rescalable for VariableInvertedAutoscale {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use approx::assert_ulps_eq;
     use ndarray::array;
 
     #[test]
@@ -44,7 +45,7 @@ mod tests {
     fn create_variable_with_values_and_rescale() {
         let var = VariableInvertedAutoscale::new(array![0., 0.5, 1., 1.5]);
         assert_eq!(var.length(), 4);
-        assert_eq!(
+        assert_ulps_eq!(
             var.rescale(),
             array![1., 0.6666666666666667, 0.33333333333333337, 0.]
         );
