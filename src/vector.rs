@@ -3,11 +3,13 @@ use ndarray::{Array1, ArrayView1, ArrayView2, Zip};
 use ndarray_stats::QuantileExt;
 
 fn l2_norm(v: ArrayView1<f64>) -> f64 {
+    // TODO: we don't check for empty vectors because the caller guarantees for it
     v.dot(&v).sqrt()
 }
 
 fn l2_norm_vectors(m: ArrayView2<f64>) -> Array1<f64> {
     // compute l2 norm for each vector (row)
+    // TODO: we don't check for empty vectors because the caller guarantees for it
     let mut norms = Array1::zeros(m.nrows());
 
     Zip::from(&mut norms)
@@ -18,6 +20,7 @@ fn l2_norm_vectors(m: ArrayView2<f64>) -> Array1<f64> {
 
 pub fn index_of_best_vector(m: ArrayView2<f64>) -> usize {
     // compute l2 norm for each vector (row) and find the best (min) vector
+    // TODO: we don't check for empty vectors because the caller guarantees for it
     l2_norm_vectors(m).argmin().unwrap()
 }
 

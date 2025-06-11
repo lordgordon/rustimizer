@@ -9,6 +9,7 @@ pub struct VariableInvertedAutoscale {
 
 impl VariableInvertedAutoscale {
     pub fn new(values: Array1<f64>) -> Self {
+        // TODO: guarantee that the array is not empty
         Self { values }
     }
 }
@@ -47,6 +48,5 @@ mod tests {
             var.rescale(),
             array![1., 0.6666666666666667, 0.33333333333333337, 0.]
         );
-        // TODO: assert almost equal
     }
 }

@@ -9,6 +9,7 @@ pub struct VariableAutoscale {
 
 impl VariableAutoscale {
     pub fn new(values: Array1<f64>) -> Self {
+        // TODO: guarantee that the array is not empty
         Self { values }
     }
 }
@@ -48,8 +49,5 @@ mod tests {
             var.rescale(),
             array![0., 0.3333333333333333, 0.6666666666666666, 1.]
         );
-        // TODO: assert almost equal
-        // approx = "0.5.1" for single values, we need a solution to compare arrays
-        // check if ndarray has already it
     }
 }

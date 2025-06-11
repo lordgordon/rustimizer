@@ -3,6 +3,7 @@ use ndarray::{Array1, ArrayView1};
 use ndarray_stats::QuantileExt;
 
 pub fn rescale_vector(v: ArrayView1<f64>, shift: f64, scaling_factor: f64) -> Array1<f64> {
+    // TODO: we don't check for empty vectors because the caller guarantees for it
     let shift_vector = Array1::from_elem(v.len(), shift);
     (&v - shift_vector) * scaling_factor
 }
@@ -13,12 +14,14 @@ pub fn rescale_and_invert_vector(
     scaling_factor: f64,
 ) -> Array1<f64> {
     // This is scaling and then a 180° rotation to ensure the min is now the max, and vice-versa.
+    // TODO: we don't check for empty vectors because the caller guarantees for it
     let ones = Array1::ones(v.len());
     (&rescale_vector(v, shift, scaling_factor) - ones) * -1.0
 }
 
 pub fn autorescale_vector(v: ArrayView1<f64>, inverted: bool) -> Array1<f64> {
-    // TODO: handle the  case where min == max
+    // TODO: handle the  case where min == max (single valued array, or multi valued with the same value)
+    // TODO: we don't check for empty vectors because the caller guarantees for it
     let shift = v.min().unwrap();
     let scaling_factor = 1.0 / (v.max().unwrap() - shift);
     if inverted {
