@@ -20,7 +20,7 @@ NC=\033[0m # No Color
     release \
     test
 
-all: check build test
+all: check build test build-release
 
 install: ## Just install the tooling for the local dev environment
 	@echo "\n${BLUE}pre-commit hook install and run...${NC}\n"
