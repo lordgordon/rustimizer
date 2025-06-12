@@ -1,10 +1,10 @@
 //! This module define a problem as a matrix of variables
-use crate::variables::traits::{GenericVariableProperties, Variable};
+use crate::variables::traits::VariableProperties;
 use std::collections::BTreeMap;
 // TODO: reorganize modules for better visibility
 
 pub struct Problem {
-    variables: BTreeMap<String, Box<Variable>>,
+    variables: BTreeMap<String, Box<dyn VariableProperties>>,
 }
 
 impl Default for Problem {
@@ -20,7 +20,7 @@ impl Problem {
         }
     }
 
-    pub fn add_variable<T: GenericVariableProperties + 'static>(&mut self, variable: T) -> usize {
+    pub fn add_variable<T: VariableProperties + 'static>(&mut self, variable: T) -> usize {
         // TODO: all variables must have the same number of values
         // TODO: fail if the variable already exists
         self.variables
