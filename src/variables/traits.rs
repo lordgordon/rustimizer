@@ -1,6 +1,10 @@
 //! This module defines the traites for the vectorized variables.
 use ndarray::{Array1, ArrayView1};
 
+pub trait HasName {
+    fn name(&self) -> &str;
+}
+
 pub trait HasValues {
     fn values(&self) -> ArrayView1<f64>;
 }
