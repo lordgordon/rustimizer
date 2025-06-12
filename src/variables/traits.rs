@@ -18,3 +18,9 @@ pub trait HasLength: HasValues {
 pub trait Rescalable: HasValues {
     fn rescale(&self) -> Array1<f64>;
 }
+
+pub trait GenericVariableProperties: HasName + HasValues + HasLength + Rescalable {}
+
+impl<T: HasName + HasValues + HasLength + Rescalable> GenericVariableProperties for T {}
+
+pub type Variable = dyn GenericVariableProperties;
