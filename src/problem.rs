@@ -43,7 +43,7 @@ mod tests {
 
     #[test]
     fn create_problem_with_variables() {
-        let mut p = Problem::new();
+        let mut p = Problem::default();
         assert_eq!(
             p.add_variable(VariableAutoscale::new("x".to_string(), array![1., 2., 3.])),
             1
