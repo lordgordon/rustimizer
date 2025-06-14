@@ -15,8 +15,14 @@ opt-level = 1               # Use slightly better optimizations.
 
 [profile.release]
 strip = "debuginfo"         # strip either symbols or debuginfo from a binary.
+codegen-units = 1
+lto = false
 
 [dependencies]
 ndarray = "0.16.1"
 ndarray-stats = "0.6.0"
 thiserror = "2.0.12"
+
+[dev-dependencies]
+approx = "0.5.1"
+ndarray = { version = "*", features = ["approx"] }

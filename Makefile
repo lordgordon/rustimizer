@@ -60,7 +60,7 @@ format-fmt: ## Code formatting with rustfmt
 
 format: format-clippy format-fmt ## Apply all code formatting
 
-test: ## Run all unit test
+test: ## Run all unit tests
 	cargo test
 
 release: check format build test build-release ## Execute all the commands to release

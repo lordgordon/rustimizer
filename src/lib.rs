@@ -1,3 +1,4 @@
-pub mod vector;
+pub mod solver;
+pub mod variables;
 
 pub mod prelude {}
