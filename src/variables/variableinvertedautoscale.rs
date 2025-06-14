@@ -1,6 +1,6 @@
 //! This module implements the basic autoscaled vectorized variables.
 use crate::variables::scaling::autorescale_vector;
-use crate::variables::traits::{HasLength, HasName, HasValues, Rescalable};
+use crate::variables::traits::VariableProperties;
 use ndarray::{Array1, ArrayView1};
 
 pub struct VariableInvertedAutoscale {
@@ -16,21 +16,15 @@ impl VariableInvertedAutoscale {
     }
 }
 
-impl HasName for VariableInvertedAutoscale {
+impl VariableProperties for VariableInvertedAutoscale {
     fn name(&self) -> &str {
         self.name.as_str()
     }
-}
 
-impl HasValues for VariableInvertedAutoscale {
     fn values(&self) -> ArrayView1<f64> {
         self.values.view()
     }
-}
 
-impl HasLength for VariableInvertedAutoscale {}
-
-impl Rescalable for VariableInvertedAutoscale {
     fn rescale(&self) -> Array1<f64> {
         autorescale_vector(self.values.view(), true)
     }
