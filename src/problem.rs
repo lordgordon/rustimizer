@@ -1,5 +1,6 @@
 //! This module define a problem as a matrix of variables
 use crate::variables::traits::VariableProperties;
+use ndarray::{Array1, Array2, ArrayView1, Axis, stack};
 use std::collections::BTreeMap;
 // TODO: reorganize modules for better visibility
 
@@ -26,6 +27,13 @@ impl Problem {
         self.variables
             .insert(variable.name().to_string(), Box::new(variable));
         self.variables.len()
+    }
+
+    pub fn get_problem_matrix(&self) -> Array2<f64> {
+        let rows: Vec<Array1<f64>> = self.variables.values().map(|v| v.rescale()).collect();
+        let views: Vec<ArrayView1<f64>> = rows.iter().map(|a| a.view()).collect();
+        let matrix = stack(Axis(0), &views).expect("Stack failed");
+        matrix.reversed_axes()
     }
 }
 
@@ -54,6 +62,15 @@ mod tests {
                 array![3., 4., 5.]
             )),
             2
+        );
+        assert_eq!(
+            p.get_problem_matrix(),
+            array![
+                //x  y   (rescaled)
+                [0., 1.],
+                [0.5, 0.5],
+                [1., 0.],
+            ]
         );
     }
 }
