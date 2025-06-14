@@ -1,4 +1,5 @@
 //! This module define a problem as a matrix of variables
+use super::vector::index_of_best_vector;
 use crate::variables::traits::VariableProperties;
 use ndarray::{Array1, Array2, ArrayView1, Axis, stack};
 use std::collections::BTreeMap;
@@ -29,11 +30,17 @@ impl Problem {
         self.variables.len()
     }
 
-    pub fn get_problem_matrix(&self) -> Array2<f64> {
+    fn get_problem_matrix(&self) -> Array2<f64> {
         let rows: Vec<Array1<f64>> = self.variables.values().map(|v| v.rescale()).collect();
         let views: Vec<ArrayView1<f64>> = rows.iter().map(|a| a.view()).collect();
         let matrix = stack(Axis(0), &views).expect("Stack failed");
         matrix.reversed_axes()
+    }
+
+    pub fn solve(&self) -> usize {
+        // TODO: should return the whole vector
+        let matrix = self.get_problem_matrix();
+        index_of_best_vector(matrix.view())
     }
 }
 
@@ -43,6 +50,16 @@ mod tests {
     use crate::variables::variableautoscale::VariableAutoscale;
     use crate::variables::variableinvertedautoscale::VariableInvertedAutoscale;
     use ndarray::array;
+
+    fn create_test_problem() -> Problem {
+        let mut p = Problem::default();
+        p.add_variable(VariableAutoscale::new("x".to_string(), array![1., 2., 3.]));
+        p.add_variable(VariableInvertedAutoscale::new(
+            "y".to_string(),
+            array![3., 4., 5.],
+        ));
+        p
+    }
 
     #[test]
     fn create_empty_problem() {
@@ -63,6 +80,11 @@ mod tests {
             )),
             2
         );
+    }
+
+    #[test]
+    fn problem_matrix_is_rescaled() {
+        let p = create_test_problem();
         assert_eq!(
             p.get_problem_matrix(),
             array![
@@ -72,5 +94,11 @@ mod tests {
                 [1., 0.],
             ]
         );
+    }
+
+    #[test]
+    fn problem_is_solved() {
+        let p = create_test_problem();
+        assert_eq!(p.solve(), 1,)
     }
 }

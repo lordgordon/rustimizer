@@ -1,6 +1,6 @@
 //! This module implements the basic autoscaled vectorized variables.
-use crate::variables::scaling::autorescale_vector;
-use crate::variables::traits::VariableProperties;
+use super::scaling::autorescale_vector;
+use super::traits::VariableProperties;
 use ndarray::{Array1, ArrayView1};
 
 pub struct VariableAutoscale {
