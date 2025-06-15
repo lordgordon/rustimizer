@@ -1,4 +1,10 @@
+## Details
+
 This PR fixes <# issue>.
+
+## Release Notes
+
+## Checklist
 
 I confirm that before submitting this PR I have:
 
@@ -8,7 +14,3 @@ I confirm that before submitting this PR I have:
 - [ ] run `make` in my local environment with no errors.
 - [ ] verified the dependacies and Dependabot alerts.
   - [ ] fixed high or critical vulnerabilities.
-
-## Details
-
-## Release Notes
