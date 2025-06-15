@@ -6,6 +6,7 @@ authors = ["Nicholas Fiorentini"]
 description = "PoC for decision making in Rust. Disclaimer: The project's name was chosen with the help of an LLM. "
 repository = "https://github.com/lordgordon/rustimizer"
 license-file = "LICENSE"
+publish = false
 
 [lib]
 name = "rustimizer"
