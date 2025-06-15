@@ -6,6 +6,12 @@ permissions:
   contents: write
 
 on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
     # inputs:
     #   logLevel:
@@ -45,13 +51,12 @@ jobs:
           persist-credentials: false
       # - name: Install Rust toolchain
       #   uses: dtolnay/rust-toolchain@stable
-      # - name: Run release-plz
-      #   uses: release-plz/action@v0.5
-      #   with:
-      #     command: release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - name: Run release-plz
+        uses: release-plz/action@v0.5
+        with:
+          command: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # Create a PR with the new versions and changelog, preparing the next release.
   release-plz-pr:
@@ -71,30 +76,9 @@ jobs:
           persist-credentials: false
       # - name: Install Rust toolchain
       #   uses: dtolnay/rust-toolchain@stable
-      # - name: Run release-plz
-      #   uses: release-plz/action@v0.5
-      #   with:
-      #     command: release-pr
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-
-# jobs:
-#   run-tests:
-#     name: Build and run tests, check code quality
-#     runs-on: ubuntu-24.04
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           persist-credentials: false
-#       - uses: actions/setup-python@v3
-#       - name: install pre-commit
-#         run: pip install "pre-commit~=4.2.0"
-#       - name: build for tests
-#         run: make build
-#       - name: check code quality
-#         run: make check
-#       - name: run tests
-#         run: make test
-#       - name: build for release
-#         run: make release
+      - name: Run release-plz
+        uses: release-plz/action@v0.5
+        with:
+          command: release-pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
