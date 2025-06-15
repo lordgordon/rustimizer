@@ -6,35 +6,9 @@ permissions:
   contents: write
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
-  workflow_dispatch:
-    # inputs:
-    #   logLevel:
-    #     description: 'Log level'
-    #     required: true
-    #     default: 'warning'
-    #     type: choice
-    #     options:
-    #       - info
-    #       - warning
-    #       - debug
-    #   print_tags:
-    #     description: 'True to print to STDOUT'
-    #     required: true
-    #     type: boolean
-    #   tags:
-    #     description: 'Test scenario tags'
-    #     required: true
-    #     type: string
-    #   environment:
-    #     description: 'Environment to run tests against'
-    #     type: environment
-    #     required: true
 
 jobs:
   # Release unpublished packages.
@@ -49,8 +23,8 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      # - name: Install Rust toolchain
-      #   uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
       - name: Run release-plz
         uses: release-plz/action@v0.5
         with:
@@ -74,8 +48,8 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      # - name: Install Rust toolchain
-      #   uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
       - name: Run release-plz
         uses: release-plz/action@v0.5
         with:
