@@ -2,8 +2,9 @@
 name: Release
 
 permissions:
-  pull-requests: write
   contents: write
+  issues: write
+  pull-requests: write
 
 on:
   push:
@@ -15,8 +16,6 @@ jobs:
   release-plz-release:
     name: Release-plz release
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,9 +34,6 @@ jobs:
   release-plz-pr:
     name: Release-plz PR
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-      pull-requests: write
     concurrency:
       group: release-plz-${{ github.ref }}
       cancel-in-progress: false
