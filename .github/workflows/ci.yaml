@@ -27,3 +27,5 @@ jobs:
         run: make check
       - name: run tests
         run: make test
+      - name: build for release
+        run: make release
