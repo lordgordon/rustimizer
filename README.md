@@ -46,3 +46,6 @@ make help
 
 We use [release-plz](https://release-plz.dev/). Merging a PR to main automatically generates a new PR with the relevant
 changes.
+
+`release-plz` runs in the ci/cd and is not part of the local enviroment. In case of issues, you may need to install it
+in your local env with `cargo install --locked release-plz`.
