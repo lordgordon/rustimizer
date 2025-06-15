@@ -12,9 +12,18 @@ on:
 
 jobs:
   run-tests:
-    name: Build for tests, run linters
+    name: Build and run tests, check code quality
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - uses: actions/setup-python@v3
+      - name: install pre-commit
+        run: pip instlal "pre-commit~=4.2.0"
+      - name: build for tests
+        run: make build
+      - name: check code quality
+        run: make check
+      - name: run tests
+        run: make test
