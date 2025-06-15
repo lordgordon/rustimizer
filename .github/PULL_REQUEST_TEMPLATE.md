@@ -2,6 +2,7 @@ This PR fixes <# issue>.
 
 I confirm that before submitting this PR I have:
 
+- [ ] The PR title is using the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) language.
 - [ ] updated the code documentation.
 - [ ] updated the end-user documentation.
 - [ ] run `make` in my local environment with no errors.
