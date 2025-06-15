@@ -1,0 +1,31 @@
+# Workflow to validate a PR when adding new commits
+name: PR Validation (CI)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-tests:
+    name: Build and run tests, check code quality
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v3
+      - name: install pre-commit
+        run: pip install "pre-commit~=4.2.0"
+      - name: build for tests
+        run: make build
+      - name: check code quality
+        run: make check
+      - name: run tests
+        run: make test
+      - name: build for release
+        run: make release
