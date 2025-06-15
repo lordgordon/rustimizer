@@ -20,7 +20,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@v3
       - name: install pre-commit
-        run: pip instlal "pre-commit~=4.2.0"
+        run: pip install "pre-commit~=4.2.0"
       - name: build for tests
         run: make build
       - name: check code quality
