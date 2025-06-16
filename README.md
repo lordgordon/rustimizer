@@ -44,8 +44,16 @@ make help
 
 ### Release process
 
-We use [release-plz](https://release-plz.dev/). Merging a PR to main automatically generates a new PR with the relevant
-changes.
+We use [release-plz](https://release-plz.dev/).
+
+1. When you are ready for a new release, manually trigger the "[Release](./github/workflows/release.yaml)"" workflow.
+2. This creates a new unpublished package and generates a new GitHub release, as well as the PR with the updated
+   changelog.
+3. Review, approve and merge the PR.
+
+Every merge to main (including any commit) runs the
+"[Publish Unreleased Packages](./github/workflows/publish-unreleased.yaml)" workflow that takes care of publishing.
+Therefore, after step 3, this will run and automatically publish the new release.
 
 `release-plz` runs in the ci/cd and is not part of the local enviroment. In case of issues, you may need to install it
 in your local env with `cargo install --locked release-plz`.
