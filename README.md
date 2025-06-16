@@ -56,4 +56,7 @@ Every merge to main (including any commit) runs the
 Therefore, after step 3, this will run and automatically publish the new release.
 
 `release-plz` runs in the ci/cd and is not part of the local enviroment. In case of issues, you may need to install it
-in your local env with `cargo install --locked release-plz`.
+in your local env with:
+```shell
+cargo install --locked cargo-semver-checks release-plz
+```
