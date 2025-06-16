@@ -5,7 +5,6 @@ dependencies_update = false # update dependencies with `cargo update`
 git_release_enable = true # enable GitHub releases
 pr_branch_prefix = "release-plz-" # PR branch prefix
 pr_labels = ["release"] # add the `release` label to the release Pull Request
-publish = false # disable `cargo publish`
 
 [changelog]
 protect_breaking_commits = true # always include commits with breaking changes in the changelog

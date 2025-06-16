@@ -14,6 +14,7 @@ jobs:
   release-plz-release:
     name: Release-plz release
     runs-on: ubuntu-24.04
+    if: ${{ github.repository_owner == 'lordgordon' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,3 +28,4 @@ jobs:
           command: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
