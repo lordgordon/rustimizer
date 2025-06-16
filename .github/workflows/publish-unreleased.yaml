@@ -1,22 +1,19 @@
 # https://release-plz.dev/docs/github/quickstart
-name: Release
+name: Publish Unreleased Packages
 
 permissions:
   contents: write
-  issues: write
-  pull-requests: write
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-# Create a PR with the new versions and changelog, preparing the next release.
-  release-plz-pr:
-    name: Release-plz PR
+  # Release unpublished packages.
+  release-plz-release:
+    name: Release-plz release
     runs-on: ubuntu-24.04
-    concurrency:
-      group: release-plz-${{ github.ref }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,6 +24,6 @@ jobs:
       - name: Run release-plz
         uses: release-plz/action@v0.5
         with:
-          command: release-pr
+          command: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
