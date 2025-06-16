@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.2](https://github.com/lordgordon/rustimizer/compare/v0.0.1...v0.0.2) - 2025-06-16
+
+### Other
+
+- add missing cargo-semver-checks install step for local run of release-plz
+
 ## [0.0.1](https://github.com/lordgordon/rustimizer/releases/tag/v0.0.1) - 2025-06-15
 
 ### Fixed
