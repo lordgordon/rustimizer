@@ -5,7 +5,7 @@ edition = "2024"
 authors = ["Nicholas Fiorentini"]
 description = "PoC for decision making in Rust. Disclaimer: The project's name was chosen with the help of an LLM. "
 repository = "https://github.com/lordgordon/rustimizer"
-license-file = "LICENSE"
+license = "MIT"
 
 [lib]
 name = "rustimizer"
