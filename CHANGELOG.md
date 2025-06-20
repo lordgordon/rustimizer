@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3](https://github.com/lordgordon/rustimizer/compare/v0.0.2...v0.0.3) - 2025-06-20
+
+### Fixed
+
+- Cargo.toml license for crates.io ([#36](https://github.com/lordgordon/rustimizer/pull/36))
+
 ## [0.0.2](https://github.com/lordgordon/rustimizer/compare/v0.0.1...v0.0.2) - 2025-06-16
 
 ### Fixed
