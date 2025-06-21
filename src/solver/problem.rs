@@ -25,12 +25,16 @@ impl Problem {
         // TODO: all variables must have the same number of values
         // TODO: fail if the variable already exists
         self.variables
-            .insert(variable.name().to_string(), Box::new(variable));
+            .insert(variable.name().as_str().to_string(), Box::new(variable));
         self.variables.len()
     }
 
     fn get_problem_matrix(&self) -> Array2<f64> {
-        let rows: Vec<Array1<f64>> = self.variables.values().map(|v| v.rescale()).collect();
+        let rows: Vec<Array1<f64>> = self
+            .variables
+            .values()
+            .map(|v| v.rescale().values().to_owned())
+            .collect();
         let views: Vec<ArrayView1<f64>> = rows.iter().map(|a| a.view()).collect();
         let matrix = stack(Axis(0), &views).expect("Stack failed");
         matrix.reversed_axes()
@@ -46,16 +50,19 @@ impl Problem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::variables::VariableAutoscale;
-    use crate::variables::VariableInvertedAutoscale;
+    use crate::variables::{Name, Values, VariableAutoscale, VariableInvertedAutoscale};
     use ndarray::array;
+    use std::convert::TryFrom;
 
     fn create_test_problem() -> Problem {
         let mut p = Problem::default();
-        p.add_variable(VariableAutoscale::new("x".to_string(), array![1., 2., 3.]));
+        p.add_variable(VariableAutoscale::new(
+            Name::try_from("x").unwrap(),
+            Values::try_from(array![1., 2., 3.]).unwrap(),
+        ));
         p.add_variable(VariableInvertedAutoscale::new(
-            "y".to_string(),
-            array![3., 4., 5.],
+            Name::try_from("y").unwrap(),
+            Values::try_from(array![3., 4., 5.]).unwrap(),
         ));
         p
     }
@@ -69,13 +76,16 @@ mod tests {
     fn create_problem_with_variables() {
         let mut p = Problem::default();
         assert_eq!(
-            p.add_variable(VariableAutoscale::new("x".to_string(), array![1., 2., 3.])),
+            p.add_variable(VariableAutoscale::new(
+                Name::try_from("x").unwrap(),
+                Values::try_from(array![1., 2., 3.]).unwrap()
+            )),
             1
         );
         assert_eq!(
             p.add_variable(VariableInvertedAutoscale::new(
-                "y".to_string(),
-                array![3., 4., 5.]
+                Name::try_from("y").unwrap(),
+                Values::try_from(array![3., 4., 5.]).unwrap(),
             )),
             2
         );

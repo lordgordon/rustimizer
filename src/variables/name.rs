@@ -10,6 +10,12 @@ pub enum NameError {
     InvalidCharacters,
 }
 
+impl Name {
+    pub fn as_str(&self) -> &str {
+        self.0.as_str()
+    }
+}
+
 impl PartialEq<&str> for &Name {
     fn eq(&self, other: &&str) -> bool {
         self.0 == *other
@@ -62,6 +68,7 @@ mod tests {
     fn test_try_from_valid_name_str() {
         let name = Name::try_from("x1_valid").unwrap();
         assert_eq!(name, "x1_valid");
+        assert_eq!(name.as_str(), "x1_valid");
     }
 
     #[test]
