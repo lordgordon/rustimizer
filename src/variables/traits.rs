@@ -1,14 +1,10 @@
 //! This module defines the traites for the vectorized variables.
-use ndarray::{Array1, ArrayView1};
+use super::values::Values;
 
 pub trait VariableProperties {
     fn name(&self) -> &str;
 
-    fn values(&self) -> ArrayView1<f64>;
+    fn values(&self) -> &Values;
 
-    fn length(&self) -> usize {
-        self.values().len()
-    }
-
-    fn rescale(&self) -> Array1<f64>;
+    fn rescale(&self) -> Values;
 }

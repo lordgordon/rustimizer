@@ -1,17 +1,15 @@
 //! This module implements the basic autoscaled vectorized variables.
 use super::scaling::autorescale_vector;
 use super::traits::VariableProperties;
-use ndarray::{Array1, ArrayView1};
+use super::values::Values;
 
 pub struct VariableAutoscale {
     name: String,
-    values: Array1<f64>,
+    values: Values,
 }
 
 impl VariableAutoscale {
-    pub fn new(name: String, values: Array1<f64>) -> Self {
-        // TODO: guarantee that the array is not empty
-        // TODO: validate name
+    pub fn new(name: String, values: Values) -> Self {
         Self { name, values }
     }
 }
@@ -21,12 +19,12 @@ impl VariableProperties for VariableAutoscale {
         self.name.as_str()
     }
 
-    fn values(&self) -> ArrayView1<f64> {
-        self.values.view()
+    fn values(&self) -> &Values {
+        &self.values
     }
 
-    fn rescale(&self) -> Array1<f64> {
-        autorescale_vector(self.values.view(), false)
+    fn rescale(&self) -> Values {
+        autorescale_vector(self.values(), false)
     }
 }
 
@@ -35,11 +33,11 @@ mod tests {
     use super::*;
     use approx::assert_ulps_eq;
     use ndarray::array;
+    use std::convert::TryFrom;
 
     #[test]
     fn create_variable_with_single_value_and_rescale() {
-        let var = VariableAutoscale::new("x".to_string(), array![0.]);
-        assert_eq!(var.length(), 1);
+        let var = VariableAutoscale::new("x".to_string(), Values::try_from(array![0.]).unwrap());
         assert_eq!(var.name(), "x");
         // assert_eq!(var.rescale(), array![0.]);
         // TODO: handle the single value case
@@ -47,11 +45,13 @@ mod tests {
 
     #[test]
     fn create_variable_with_values_and_rescale() {
-        let var = VariableAutoscale::new("x".to_string(), array![0., 0.5, 1., 1.5]);
-        assert_eq!(var.length(), 4);
+        let var = VariableAutoscale::new(
+            "x".to_string(),
+            Values::try_from(array![0., 0.5, 1., 1.5]).unwrap(),
+        );
         assert_eq!(var.name(), "x");
         assert_ulps_eq!(
-            var.rescale(),
+            var.rescale().values(),
             array![0., 0.3333333333333333, 0.6666666666666666, 1.]
         );
     }
