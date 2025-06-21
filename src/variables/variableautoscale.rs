@@ -1,22 +1,23 @@
 //! This module implements the basic autoscaled vectorized variables.
+use super::Name;
+use super::Values;
+use super::VariableProperties;
 use super::scaling::autorescale_vector;
-use super::traits::VariableProperties;
-use super::values::Values;
 
 pub struct VariableAutoscale {
-    name: String,
+    name: Name,
     values: Values,
 }
 
 impl VariableAutoscale {
-    pub fn new(name: String, values: Values) -> Self {
+    pub fn new(name: Name, values: Values) -> Self {
         Self { name, values }
     }
 }
 
 impl VariableProperties for VariableAutoscale {
-    fn name(&self) -> &str {
-        self.name.as_str()
+    fn name(&self) -> &Name {
+        &self.name
     }
 
     fn values(&self) -> &Values {
@@ -37,7 +38,10 @@ mod tests {
 
     #[test]
     fn create_variable_with_single_value_and_rescale() {
-        let var = VariableAutoscale::new("x".to_string(), Values::try_from(array![0.]).unwrap());
+        let var = VariableAutoscale::new(
+            Name::try_from("x").unwrap(),
+            Values::try_from(array![0.]).unwrap(),
+        );
         assert_eq!(var.name(), "x");
         assert_eq!(var.rescale().values(), array![0.]);
     }
@@ -45,7 +49,7 @@ mod tests {
     #[test]
     fn create_variable_with_values_and_rescale() {
         let var = VariableAutoscale::new(
-            "x".to_string(),
+            Name::try_from("x").unwrap(),
             Values::try_from(array![0., 0.5, 1., 1.5]).unwrap(),
         );
         assert_eq!(var.name(), "x");

@@ -1,8 +1,9 @@
 //! This module defines the traites for the vectorized variables.
-use super::values::Values;
+use super::Name;
+use super::Values;
 
 pub trait VariableProperties {
-    fn name(&self) -> &str;
+    fn name(&self) -> &Name;
 
     fn values(&self) -> &Values;
 
