@@ -6,7 +6,7 @@ pub struct Name(String);
 pub enum NameError {
     #[error("The name cannot be empty")]
     Empty,
-    #[error("The name must be alphanumeric")]
+    #[error("The name must have only teh following allowed characters: alphanumeric, underscore")]
     InvalidCharacters,
 }
 
@@ -35,6 +35,12 @@ impl TryFrom<&str> for Name {
         if name.is_empty() {
             return Err(NameError::Empty);
         }
+
+        let all_valid_chars = name.chars().all(|c| c.is_alphanumeric() || c == '_');
+        if !all_valid_chars {
+            return Err(NameError::InvalidCharacters);
+        }
+
         Ok(Name(String::from(name)))
     }
 }
@@ -54,8 +60,8 @@ mod tests {
 
     #[test]
     fn test_try_from_valid_name_str() {
-        let name = Name::try_from("x").unwrap();
-        assert_eq!(name, "x");
+        let name = Name::try_from("x1_valid").unwrap();
+        assert_eq!(name, "x1_valid");
     }
 
     #[test]
@@ -65,8 +71,14 @@ mod tests {
     }
 
     #[test]
-    fn test_try_from_empty_string() {
+    fn test_try_from_empty_string_failure() {
         let err = Name::try_from("").unwrap_err();
         assert_eq!(err, NameError::Empty);
+    }
+
+    #[test]
+    fn test_try_from_invalid_string_failure() {
+        let err = Name::try_from("a?").unwrap_err();
+        assert_eq!(err, NameError::InvalidCharacters);
     }
 }
