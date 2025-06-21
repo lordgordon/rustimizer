@@ -39,8 +39,7 @@ mod tests {
     fn create_variable_with_single_value_and_rescale() {
         let var = VariableAutoscale::new("x".to_string(), Values::try_from(array![0.]).unwrap());
         assert_eq!(var.name(), "x");
-        // assert_eq!(var.rescale(), array![0.]);
-        // TODO: handle the single value case
+        assert_eq!(var.rescale().values(), array![0.]);
     }
 
     #[test]

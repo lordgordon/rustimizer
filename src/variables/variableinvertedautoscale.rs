@@ -40,7 +40,7 @@ mod tests {
         let var =
             VariableInvertedAutoscale::new("x".to_string(), Values::try_from(array![0.]).unwrap());
         assert_eq!(var.name(), "x");
-        // assert_eq!(var.rescale(), array![0.]);
+        assert_eq!(var.rescale().values(), array![0.]);
     }
 
     #[test]

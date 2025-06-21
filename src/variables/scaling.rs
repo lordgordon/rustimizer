@@ -22,14 +22,20 @@ pub fn rescale_and_invert_vector(
 }
 
 pub fn autorescale_vector(v: &Values, inverted: bool) -> Values {
-    // TODO: handle the  case where min == max (single valued array, or multi valued with the same value)
     let values = v.values();
     let shift = values.min().unwrap();
-    let scaling_factor = 1.0 / (values.max().unwrap() - shift);
-    if inverted {
-        Values::try_from(rescale_and_invert_vector(values, *shift, scaling_factor)).unwrap()
+    let max_value = values.max().unwrap();
+    let scaling_factor = 1.0 / (max_value - shift);
+
+    if scaling_factor.is_finite() {
+        if inverted {
+            Values::try_from(rescale_and_invert_vector(values, *shift, scaling_factor)).unwrap()
+        } else {
+            Values::try_from(rescale_vector(values, *shift, scaling_factor)).unwrap()
+        }
     } else {
-        Values::try_from(rescale_vector(values, *shift, scaling_factor)).unwrap()
+        // Handle special cases where all values are the same (min == max). The result is always a zero-vetor.
+        Values::try_from(Array1::zeros(values.len())).unwrap()
     }
 }
 
@@ -39,6 +45,22 @@ mod tests {
     use approx::assert_ulps_eq;
     use ndarray::array;
     use std::convert::TryFrom;
+
+    #[test]
+    fn rescale_vector_size_one() {
+        let v = Values::try_from(array![1.]).unwrap();
+        let expected_scaled = array![0.];
+        assert_ulps_eq!(autorescale_vector(&v, false).values(), expected_scaled);
+        assert_ulps_eq!(autorescale_vector(&v, true).values(), expected_scaled);
+    }
+
+    #[test]
+    fn rescale_vector_all_values_with_small_precision() {
+        let v = Values::try_from(array![3., 3., 3.]).unwrap();
+        let expected_scaled = array![0., 0., 0.];
+        assert_ulps_eq!(autorescale_vector(&v, false).values(), expected_scaled);
+        assert_ulps_eq!(autorescale_vector(&v, true).values(), expected_scaled);
+    }
 
     #[test]
     fn rescale_vector_pos_already_scaled() {
