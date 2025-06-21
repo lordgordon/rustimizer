@@ -1,9 +1,8 @@
 //! This module define a problem as a matrix of variables
 use super::vector::index_of_best_vector;
-use crate::variables::traits::VariableProperties;
+use crate::variables::VariableProperties;
 use ndarray::{Array1, Array2, ArrayView1, Axis, stack};
 use std::collections::BTreeMap;
-// TODO: reorganize modules for better visibility
 
 pub struct Problem {
     variables: BTreeMap<String, Box<dyn VariableProperties>>,
@@ -47,8 +46,8 @@ impl Problem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::variables::variableautoscale::VariableAutoscale;
-    use crate::variables::variableinvertedautoscale::VariableInvertedAutoscale;
+    use crate::variables::VariableAutoscale;
+    use crate::variables::VariableInvertedAutoscale;
     use ndarray::array;
 
     fn create_test_problem() -> Problem {
