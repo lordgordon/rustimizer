@@ -1,11 +1,13 @@
 //! This module define a problem as a matrix of variables
 use super::vector::index_of_best_vector;
-use crate::variables::VariableProperties;
+use crate::variables::{VariableProperties, Name};
 use ndarray::{Array1, Array2, ArrayView1, Axis, stack};
 use std::collections::BTreeMap;
 
+type AnyVariable = Box<dyn VariableProperties>;
+
 pub struct Problem {
-    variables: BTreeMap<String, Box<dyn VariableProperties>>,
+    variables: BTreeMap<Name, AnyVariable>,
 }
 
 impl Default for Problem {
@@ -15,17 +17,22 @@ impl Default for Problem {
 }
 
 impl Problem {
-    pub fn new() -> Self {
+    fn new() -> Self {
         Self {
             variables: BTreeMap::new(),
         }
     }
 
-    pub fn add_variable<T: VariableProperties + 'static>(&mut self, variable: T) -> usize {
+    pub fn define(variables: Vec<AnyVariable>) -> Self {
+        let problem = Problem::new();
+        problem
+    }
+
+    fn add_variable<T: VariableProperties + 'static>(&mut self, variable: T) -> usize {
         // TODO: all variables must have the same number of values
         // TODO: fail if the variable already exists
         self.variables
-            .insert(variable.name().as_str().to_string(), Box::new(variable));
+            .insert(variable.name().clone(), Box::new(variable));
         self.variables.len()
     }
 
