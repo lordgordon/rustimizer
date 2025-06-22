@@ -2,7 +2,7 @@
 use super::Name;
 use super::Values;
 
-pub trait VariableProperties {
+pub trait VariableProperties: std::fmt::Debug {
     fn name(&self) -> &Name;
 
     fn values(&self) -> &Values;

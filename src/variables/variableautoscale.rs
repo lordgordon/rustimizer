@@ -4,6 +4,7 @@ use super::Values;
 use super::VariableProperties;
 use super::scaling::autorescale_vector;
 
+#[derive(Debug)]
 pub struct VariableAutoscale {
     name: Name,
     values: Values,

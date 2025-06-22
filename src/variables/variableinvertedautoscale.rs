@@ -4,6 +4,7 @@ use super::Values;
 use super::VariableProperties;
 use super::scaling::autorescale_vector;
 
+#[derive(Debug)]
 pub struct VariableInvertedAutoscale {
     name: Name,
     values: Values,
