@@ -1,5 +1,5 @@
 //! This module defines the name of a variable.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Name(String);
 
 #[derive(Debug, thiserror::Error, PartialEq)]
@@ -87,5 +87,25 @@ mod tests {
     fn test_try_from_invalid_string_failure() {
         let err = Name::try_from("a?").unwrap_err();
         assert_eq!(err, NameError::InvalidCharacters);
+    }
+
+    #[test]
+    fn test_ordering() {
+        let name1 = Name::try_from("a").unwrap();
+        let name2 = Name::try_from("b").unwrap();
+
+        assert_eq!(name1, name1);
+        assert_eq!(name2, name2);
+        assert_ne!(name1, name2);
+
+        assert!(name1 < name2);
+        assert!(name2 > name1);
+        assert!(name2 >= name1);
+
+        assert!(name1 >= name1);
+        assert!(name1 <= name1);
+
+        assert!(name2 >= name2);
+        assert!(name2 <= name2);
     }
 }
