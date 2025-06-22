@@ -110,4 +110,17 @@ mod tests {
         let p = create_test_problem();
         assert_eq!(p.solve(), 1,)
     }
+
+    #[test]
+    fn solve_problem_with_single_value() {
+        let mut p = Problem::default();
+        assert_eq!(
+            p.add_variable(VariableAutoscale::new(
+                Name::try_from("x").unwrap(),
+                Values::try_from(array![1.,]).unwrap()
+            )),
+            1
+        );
+        assert_eq!(p.solve(), 0,)
+    }
 }
