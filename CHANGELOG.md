@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1](https://github.com/lordgordon/rustimizer/compare/v0.1.0...v0.1.1) - 2025-06-25
+
+### Added
+
+- minimal cli with clap. Shows version and help ([#46](https://github.com/lordgordon/rustimizer/pull/46))
+
+### Other
+
+- generate changelog for 0.1.0 ([#43](https://github.com/lordgordon/rustimizer/pull/43))
+
 ## [0.1.0](https://github.com/lordgordon/rustimizer/compare/v0.0.3...v0.1.0) - 2025-06-22
 
 This release completes the [PoC milestone](https://github.com/lordgordon/rustimizer/milestone/1).
