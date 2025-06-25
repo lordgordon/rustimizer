@@ -19,6 +19,7 @@ codegen-units = 1
 lto = false
 
 [dependencies]
+clap = { version = "4.5.40", features = ["derive", "cargo", "unicode", "wrap_help"]}
 ndarray = "0.16.1"
 ndarray-stats = "0.6.0"
 thiserror = "2.0.12"
