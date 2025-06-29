@@ -1,4 +1,5 @@
 //! This module defines the name of a variable.
+//! This allows to validate that there are no duplicate variables a given problem.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Name(String);
 

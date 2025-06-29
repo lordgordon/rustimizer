@@ -1,6 +1,7 @@
-mod problem;
+mod problemdefinition;
+mod solvableproblem;
 mod vector;
 
-pub use self::problem::Problem;
+pub use self::problemdefinition::ProblemDefinition;
 
 pub mod prelude {}

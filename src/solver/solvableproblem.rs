@@ -5,7 +5,7 @@ use ndarray::{Array1, Array2, ArrayView1, Axis, stack};
 use std::collections::BTreeMap;
 
 #[derive(Debug, thiserror::Error, PartialEq)]
-pub enum ProblemError {
+pub enum SolvableProblemError {
     #[error("The problem cannot be empty")]
     Empty,
     #[error("All variables must have the same number of values")]
@@ -15,30 +15,32 @@ pub enum ProblemError {
 }
 
 #[derive(Debug)]
-pub struct Problem {
+pub struct SolvableProblem {
     variables: BTreeMap<Name, Box<dyn VariableProperties>>,
 }
 
-impl Problem {
+impl SolvableProblem {
     fn new() -> Self {
         Self {
             variables: BTreeMap::new(),
         }
     }
 
-    pub fn define(variables: Vec<Box<dyn VariableProperties>>) -> Result<Self, ProblemError> {
+    pub fn define(
+        variables: Vec<Box<dyn VariableProperties>>,
+    ) -> Result<Self, SolvableProblemError> {
         // an empty problem is not allowed
         if variables.is_empty() {
-            return Err(ProblemError::Empty);
+            return Err(SolvableProblemError::Empty);
         }
 
-        let mut problem = Problem::new();
+        let mut problem = SolvableProblem::new();
         let mut known_size: Option<usize> = Option::None;
 
         for variable in variables {
             // variable names must be unique
             if problem.variables.contains_key(variable.name()) {
-                return Err(ProblemError::RedefinitionVariable);
+                return Err(SolvableProblemError::RedefinitionVariable);
             }
 
             // all variables must have the same number of values
@@ -46,7 +48,7 @@ impl Problem {
             if known_size.is_none() {
                 known_size = Some(current_size)
             } else if known_size.unwrap() != current_size {
-                return Err(ProblemError::VariableSizeMismatch);
+                return Err(SolvableProblemError::VariableSizeMismatch);
             }
             problem.add_variable(variable);
         }
@@ -82,8 +84,8 @@ mod tests {
     use ndarray::array;
     use std::convert::TryFrom;
 
-    fn create_test_problem() -> Problem {
-        Problem::define(vec![
+    fn create_test_problem() -> SolvableProblem {
+        SolvableProblem::define(vec![
             Box::new(VariableAutoscale::new(
                 Name::try_from("x").unwrap(),
                 Values::try_from(array![1., 2., 3.]).unwrap(),
@@ -118,7 +120,7 @@ mod tests {
 
     #[test]
     fn solve_problem_with_single_value() {
-        let p = Problem::define(vec![Box::new(VariableAutoscale::new(
+        let p = SolvableProblem::define(vec![Box::new(VariableAutoscale::new(
             Name::try_from("x").unwrap(),
             Values::try_from(array![1.,]).unwrap(),
         ))])
@@ -128,7 +130,7 @@ mod tests {
 
     #[test]
     fn test_add_variable() {
-        let mut p = Problem::new();
+        let mut p = SolvableProblem::new();
         assert_eq!(
             p.add_variable(Box::new(VariableAutoscale::new(
                 Name::try_from("x").unwrap(),
@@ -147,13 +149,13 @@ mod tests {
 
     #[test]
     fn define_problem_empty_failure() {
-        let err = Problem::define(vec![]).unwrap_err();
-        assert_eq!(err, ProblemError::Empty)
+        let err = SolvableProblem::define(vec![]).unwrap_err();
+        assert_eq!(err, SolvableProblemError::Empty)
     }
 
     #[test]
     fn define_problem_redefine_variable_failure() {
-        let err = Problem::define(vec![
+        let err = SolvableProblem::define(vec![
             Box::new(VariableAutoscale::new(
                 Name::try_from("x").unwrap(),
                 Values::try_from(array![1., 2., 3.]).unwrap(),
@@ -164,12 +166,12 @@ mod tests {
             )),
         ])
         .unwrap_err();
-        assert_eq!(err, ProblemError::RedefinitionVariable)
+        assert_eq!(err, SolvableProblemError::RedefinitionVariable)
     }
 
     #[test]
     fn define_problem_variable_with_different_size_failure() {
-        let err = Problem::define(vec![
+        let err = SolvableProblem::define(vec![
             Box::new(VariableAutoscale::new(
                 Name::try_from("x").unwrap(),
                 Values::try_from(array![1., 2., 3.]).unwrap(),
@@ -180,6 +182,6 @@ mod tests {
             )),
         ])
         .unwrap_err();
-        assert_eq!(err, ProblemError::VariableSizeMismatch)
+        assert_eq!(err, SolvableProblemError::VariableSizeMismatch)
     }
 }
