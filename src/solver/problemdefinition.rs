@@ -29,6 +29,7 @@ fn build_solvable_problem(df: &DataFrame) -> SolvableProblem {
                 .into_no_null_iter()
                 .collect::<Vec<f64>>(),
         );
+        // TODO let values: Array1<f64> = series.f64()?.to_ndarray()?;
 
         // TODO: for each variable type, build the proper struct
         variables.push(Box::new(VariableAutoscale::new(
@@ -56,6 +57,7 @@ impl ProblemDefinition {
     pub fn solve(&self) -> Row {
         // TODO: return a better structure with the variable name for each value
         self.raw_data.get_row(self.problem.solve()).unwrap()
+        // TODO: slice instead of get_row
     }
 }
 
