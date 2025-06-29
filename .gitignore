@@ -18,3 +18,7 @@ target/
 
 # Project Specific
 TODOs
+
+# Custom LLMs Code assistant configurations
+CLAUDE.md
+CLAUDE.local.md
